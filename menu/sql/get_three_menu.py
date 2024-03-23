@@ -1,4 +1,5 @@
-SQL = """WITH RECURSIVE EntityHierarchy AS (
+SQL = """
+WITH RECURSIVE EntityHierarchy AS (
   SELECT
     id as child_entity,
     parent_id as parent_entity,
@@ -8,6 +9,8 @@ SQL = """WITH RECURSIVE EntityHierarchy AS (
     menu_menuitem
   WHERE
     url = :name_path
+    or url REGEXP '(https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z0-9]{2,}(\.[a-zA-Z0-9]{2,})(\.[a-zA-Z0-9]{2,})?' || REPLACE(:name_path, '/', '\/')
+
 
   UNION
 
@@ -48,5 +51,10 @@ select * from EntityHierarchy2
 union
 select
     id, parent_id, title, url
-from menu_menuitem where parent_id = (select child_entity from EntityHierarchy2 where url = :name_path)
+from menu_menuitem where parent_id = (
+select child_entity
+from EntityHierarchy2
+where url = :name_path
+or url REGEXP '(https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z0-9]{2,}(\.[a-zA-Z0-9]{2,})(\.[a-zA-Z0-9]{2,})?' || REPLACE(:name_path, '/', '\/')
+);
 """

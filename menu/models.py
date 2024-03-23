@@ -26,7 +26,7 @@ class MenuItem(models.Model):
     )
 
     @classmethod
-    def get_entity_parents(cls, name_menu: str, name_path: str) -> Optional["MenuItem"]:
+    def get_entity_parents(cls, name_menu: str, name_path: str) -> Optional[MenuItemRecord]:
         query = get_three_menu.SQL
         params = {
             "name_path": name_path,

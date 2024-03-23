@@ -1,5 +1,6 @@
 from django import template
 from django.utils.safestring import mark_safe
+from urllib.parse import urlparse
 
 from menu.models import MenuItem
 
@@ -14,7 +15,8 @@ def draw_menu(context, menu_name):
 
     def render_menu(menu_node):
         menu_html = "<ul>"
-        active_class = "active" if active_url == menu_node.url else ""
+        pars_url = urlparse(menu_node.url)
+        active_class = "active" if active_url == pars_url.path else ""
         menu_html += f"<li>"
         menu_html += (
             f'<a href="{menu_node.url}" class="{active_class}">{menu_node.title}</a>'
